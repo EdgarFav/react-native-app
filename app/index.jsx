@@ -1,15 +1,20 @@
-import { ScrollView, StyleSheet, Text, View, Image } from 'react-native'
+import { ScrollView, Text, View, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import { Redirect, router } from 'expo-router'
 import { images } from '../constants'
 import CustomButton from '../components/customButton'
+import { useGlobalContext } from '../context/GlobalProvider'
 
 const index = () => {
 
+    const { Loading, isLogged } = useGlobalContext()
+
+    if (!Loading && isLogged) return <Redirect href='/home' />
+
     return (
         <SafeAreaView className="bg-primary h-full" >
-            <ScrollView contentContainerStyle={{ height: '100%' }} >
+            <ScrollView contentContainerStyle={{ height: '100%', paddingHorizontal: '15' }} >
                 <View className="w-full min-h-[85vh] items-center justify-center">
                     <Image
                         source={images.logo}
@@ -28,7 +33,7 @@ const index = () => {
                         </Text>
                         <Image
                             source={images.path}
-                            className="w-[135px] h-[20px] absolute -bottom-3 right-28"
+                            className="w-[135px] h-[20px] absolute -bottom-3 -right-8"
                             resizeMode='contain'
                         />
                     </View>
