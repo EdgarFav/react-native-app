@@ -4,49 +4,33 @@ import { images } from '../../constants'
 import SearchInput from '../../components/SearchInput'
 import Trending from '../../components/Trending'
 import EmptyState from '../../components/EmptyState'
-import { useEffect, useState } from 'react'
-import { getAllPosts } from '../../lib/appwrite'
+import { useState } from 'react'
+import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
+import useAppwrite from '../../lib/useAppwrite'
+import VideoCard from '../../components/VideoCard'
 
 const Home = () => {
+    //Custom hook to fetch all data
+    const { data: posts, refetch } = useAppwrite(getAllPosts)
+    const { data: latestPosts } = useAppwrite(getLatestPosts)
 
-    const [data, setData] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
 
-    useEffect(() => {
-        const fetchData = async () => {
-
-            setIsLoading(true)
-
-            try {
-                const res = await getAllPosts()
-                setData(res)
-            } catch (error) {
-                Alert.alert('Error', error.message)
-            } finally {
-                setIsLoading(false)
-            }
-        }
-        fetchData()
-    }, [])
-
-    console.log(data);
-
+    //Function and States to refresh data in home page
     const [refreshing, setRefreshing] = useState(false)
-
-    const onRefresh = () => {
+    const onRefresh = async () => {
         setRefreshing(true)
-        // Recall videos -> if any new videos appear
+        await refetch()
         setRefreshing(false)
     }
 
     return (
         <SafeAreaView className="bg-primary h-full">
             <FlatList
-                data={[{ id: 1 }, { id: 2 }, { id: 3 }]}
+                data={posts}
                 // data={[]}
-                keyExtractor={(item) => item.$id}
+                keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <Text className="text-3xl text-white">{item.id}</Text>
+                    <VideoCard video={item} />
                 )}
                 ListHeaderComponent={() => (
                     <View className="my-6 px-4 space-y-6">
@@ -68,7 +52,7 @@ const Home = () => {
                             <Text className="text-lg font-pregular text-gray-100 mb-3">
                                 Latest Videos
                             </Text>
-                            <Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }] ?? []} />
+                            <Trending posts={latestPosts ?? []} />
                         </View>
                     </View>
                 )}
