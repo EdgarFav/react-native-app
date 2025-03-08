@@ -28,7 +28,7 @@ const Home = () => {
             <FlatList
                 data={posts}
                 // data={[]}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.$id}
                 renderItem={({ item }) => (
                     <VideoCard video={item} />
                 )}
