@@ -17,9 +17,10 @@ const Create = () => {
         title: "",
         video: null,
         thumbnail: null,
-        promptVideo: ""
+        prompt: ""
     })
-    console.log(form)
+
+
 
     const player = useVideoPlayer(form.video, player => {
         if (!form.video) {
@@ -50,7 +51,7 @@ const Create = () => {
     }
 
     const submit = async () => {
-        if (form.title === "" || !form.video || !form.thumbnail || form.promptVideo === "") {
+        if (form.title === "" || !form.video || !form.thumbnail || form.prompt === "") {
             Alert.alert('Missing fields', 'Please fill all the fields')
         }
         setUploading(true)
@@ -69,7 +70,7 @@ const Create = () => {
                 title: "",
                 video: null,
                 thumbnail: null,
-                promptVideo: ""
+                prompt: ""
             })
             setUploading(false)
         }
@@ -150,9 +151,9 @@ const Create = () => {
                 </View>
                 <FormField
                     title="AI Prompt"
-                    value={form.promptVideo}
+                    value={form.prompt}
                     placeholder="The prompt you used to generate this video"
-                    handleChangeText={(e) => setForm({ ...form, promptVideo: e })}
+                    handleChangeText={(e) => setForm({ ...form, prompt: e })}
                     otherStyles="mt-7"
                 />
                 <CustomButton
